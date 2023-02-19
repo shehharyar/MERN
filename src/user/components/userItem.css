@@ -1,0 +1,14 @@
+.img{
+    margin: 12px !important;
+}
+li{
+    list-style-type: none;
+    margin-top: 12px;
+}
+.card{
+    opacity: 0.8 !important;
+}
+.card:hover{
+    opacity: 1 !important;
+    cursor: pointer;
+}
