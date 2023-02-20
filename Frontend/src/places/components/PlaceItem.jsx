@@ -36,11 +36,11 @@ const PlaceItem = ({image, id, title, description, address, coordinates}) => {
         <button>EDIT</button>
         <button>DELETE</button> */
         }
-        <Button onClick={onOpen} variant='solid'> View On Map </Button>
+        <Button onClick={onOpen} className="btn"> View On Map </Button>
         <Link to={`/places/${id}`}>
-        <Button variant='solid'> Edit </Button>
+        <Button variant='solid' className="btn"> Edit </Button>
         </Link>
-        <Button variant='solid' onClick={() => setModal2Open(true)}> Delete </Button>
+        <Button  className='btn' onClick={() => setModal2Open(true)}> Delete </Button>
       </div>
     </Card>
 

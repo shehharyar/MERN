@@ -71,3 +71,14 @@ padding: 1rem !important;
     height: 20rem !important;
   } 
 }
+
+.btn{
+  background: #905eb1 !important;
+  color: #ccc !important;
+
+}
+.btn:hover{
+  background: #9371aa !important;
+ 
+  opacity: 0.9 !important;
+}
