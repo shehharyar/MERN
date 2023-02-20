@@ -1,0 +1,73 @@
+.place-item {
+  margin: 1rem 0;
+}
+
+.place-item__content {
+  padding: 0;
+}
+
+.place-item__info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.place-item__image {
+  width: 100% !important;
+  height: 12.5rem !important;
+  margin-right: 1.5rem !important;
+}
+
+.place-item__image img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.place-item__info h2,
+.place-item__info h3,
+.place-item__info p {
+  margin: 0 0 0.5rem 0;
+}
+
+.place-item__actions {
+padding: 1rem !important;
+  text-align: center !important;
+  border-top: 1px solid #ccc !important;
+}
+
+.place-item__modal-content {
+  padding: 0 !important;
+}
+
+.place-item__modal-actions {
+  text-align: right !important;
+}
+
+.place-item__actions button,
+.place-item__actions a {
+  margin: 0.5rem !important;
+}
+
+.map-container {
+  height: 15rem !important;
+  width: 100% !important;
+}
+.card {
+  /* width: 100% !important; */
+  margin:0; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  padding: rem;
+  overflow: hidden;
+  background: white;
+  flex-direction: column !important;
+  
+
+
+}
+
+@media (min-width: 768px) {
+  .place-item__image {
+    height: 20rem !important;
+  } 
+}

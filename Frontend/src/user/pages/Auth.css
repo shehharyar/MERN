@@ -1,0 +1,31 @@
+
+.card{
+    padding: 2rem;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+.input{
+    padding: 1rem;
+    color: blueviolet;
+    background-color: rgb(228, 179, 233);
+    border: 2px solid rgb(245, 133, 245);
+    margin-top: 3rem;
+}
+.input:focus,
+.input:hover{
+    border: 2px solid rgb(146, 44, 146);
+
+}
+.LogIn{
+    margin-top: 1rem;
+    padding: 0.8rem 2rem 0.8rem 2rem !important;
+    background-color: rgba(209, 0, 209, 0.596) !important;
+}
+
+h1{
+    text-align: center;
+    font-size: medium;
+    font-weight: bold;
+    color: rgba(105, 51, 105, 0.904);
+}
