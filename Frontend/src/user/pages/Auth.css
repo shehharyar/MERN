@@ -1,16 +1,44 @@
 
 .card{
-    padding: 2rem;
+    padding: 3rem;
     flex-direction: column;
     justify-content: space-between;
 
 }
-.input{
+.auth{
+    border: 2px solid red;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    box-sizing: border-box;
+
+}
+
+/* .place-form {
+        margin: 0 auto;
     padding: 1rem;
-    color: blueviolet;
-    background-color: rgb(228, 179, 233);
-    border: 2px solid rgb(245, 133, 245);
-    margin-top: 3rem;
+    width: 100%;
+    max-width: 40rem;
+ 
+  }
+  */
+  .authentication{
+    padding: 3rem !important ;
+
+  }
+  .btn{
+    background: #4e0a4e;
+  }
+.input{
+    width: 100 !important;
+    padding: 1rem !important;
+    color: blueviolet !important;
+    background-color: rgb(228, 179, 233) !important;
+    border: 2px solid rgb(245, 133, 245) !important;
+    margin-top: 3rem !important;
 }
 .input:focus,
 .input:hover{
