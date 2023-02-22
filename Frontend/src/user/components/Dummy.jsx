@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 // import Card from '../../shared/components/UIElements/Card';
 const Dummy = ( { id, image, name, placesCount} ) => {
   return (
-    <li>
+    <li key={id}>
         
         <Link to={`/${id}/places`}>
 
@@ -41,3 +41,4 @@ const Dummy = ( { id, image, name, placesCount} ) => {
 }
 
 export default Dummy;
+ 

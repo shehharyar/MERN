@@ -1,16 +1,20 @@
-import React from 'react';
+// import React from 'react';
+import { useContext, useState } from 'react';
 import './Auth.css';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/utils/validators';
 import Input from '../../shared/FormElements/Input';
 import Card from '../../shared/components/UIElements/Card';
 import useForm from '../../shared/hooks/form-hook';
 import Button from '../../shared/FormElements/Button';
+import { AuthCOntext } from '../../shared/context/auth-context';
 
 
 
 
 function Auth() {
-const [formState, inputHandler]= useForm({
+  const [isLoginMode, setIsLoginMode]= useState(true);
+  const authCtx= useContext(AuthCOntext);
+  const [formState, inputHandler, setFormData]= useForm({
   email: {
     value: "",
     isValid: false
@@ -21,22 +25,60 @@ const [formState, inputHandler]= useForm({
   }
 }, false);
 
-function SubmitHandler(event){
+
+function swicthModeHandler(){
+if(!isLoginMode){
+  setFormData({
+    ...formState.inputs,
+    name: undefined
+  },
+  formState.inputs.email.isValid && formState.inputs.password.isValid);
+}
+else{
+  setFormData(
+    {
+      ...formState.inputs,
+      name:{
+        value: '',
+        isValid: false
+      },
+    },
+    false
+  );
+}
+
+  setIsLoginMode(prevMode => !prevMode)
+}
+
+console.log(formState.inputs)
+
+const SubmitHandler= event =>{
   event.preventDefault();
   console.log(formState.inputs)
+  authCtx.Login();
 }
 return (
   
   <Card className='authentication'>
-          <h2>LogIn Required *</h2>
-         
+          <h1>LogIn Required *</h1>
+         <hr />
     <form onSubmit={SubmitHandler}>
-      <Input
-        id="title"
-        className="input"
+     {!isLoginMode && <Input
+        id="name"
+        className={`input ${!formState.inputs.email.isValid ? " error ":null }`}
         element="input"
         type="text"
-        title="Title"
+        title="Your Name"
+        validators={[VALIDATOR_REQUIRE()]}
+        errorText="Please enter a name."
+        onInput={inputHandler}
+      />}
+      <Input
+        id="email"
+        className={`input ${!formState.inputs.email.isValid ? " error ":null }`}
+        element="input"
+        type="eamil"
+        title="Email"
         validators={[VALIDATOR_REQUIRE()]}
         errorText="Please enter a valid email address."
         onInput={inputHandler}
@@ -51,8 +93,19 @@ return (
         errorText="Please enter a valid password. at least 5 characters!"
         onInput={inputHandler}
       />
-      <Button type="submit" className="btn" disabled={!formState.isValid}>LOGIN</Button>
-        </form>  
+
+      <div className='btn_container'>
+
+      <Button type="submit" className="btn" disabled={!formState.isValid}>
+        {isLoginMode ? "LOGIN" : "SIGN UP"}</Button>
+      </div>
+
+        </form>
+        <div className='btn_container'>
+          
+      <Button type="submit"  onClick={swicthModeHandler} className="btn-2">SWITCH TO {isLoginMode ? "SIGN UP" : "SIGN IN"}</Button>
+          </div>  
+
       </Card>
 
   )

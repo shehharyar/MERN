@@ -22,7 +22,7 @@ const inputReducer = (state, action) => {
   
   
 
-const Input = ({ id, element, title, type, initialValue, initialIsValid, rows, errorText,validators,onInput, placeholder}) =>{
+const Input = ({ id, element, title, type, className,initialValue, initialIsValid, rows, errorText,validators,onInput, placeholder}) =>{
 
   const [inputState, dispatch] = useReducer(inputReducer, 
     {
@@ -61,7 +61,8 @@ const touchHandler = () =>{
     ? 
     <input 
 
-    id={id} type={type} 
+    id={id} type={type}
+    className={className} 
     placeholder={placeholder} 
     onBlur={touchHandler}
     onChange={changeHandler} 

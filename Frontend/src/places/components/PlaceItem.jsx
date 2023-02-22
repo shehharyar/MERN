@@ -1,17 +1,19 @@
 import { Button} from '@chakra-ui/react';
 import { Modal } from 'antd';
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { Link } from 'react-router-dom';
 import Card from '../../shared/components/UIElements/Card';
 import ReactModal from '../../shared/components/UIElements/ReactModal';
 import './PlaceItem.css';
 import { useDisclosure } from '@chakra-ui/react';
+import { AuthCOntext } from '../../shared/context/auth-context';
 
 // import Map from '../../shared/components/UIElements/Map';
 const PlaceItem = ({image, id, title, description, address, coordinates}) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [modal1Open, setModal1Open] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
+  const authCtx=  useContext(AuthCOntext);
   return (
     <div>
 <ReactModal header={title} isOpen={isOpen} onClose={onClose} coordinates={coordinates}/>
@@ -38,9 +40,10 @@ const PlaceItem = ({image, id, title, description, address, coordinates}) => {
         }
         <Button onClick={onOpen} className="btn"> View On Map </Button>
         <Link to={`/places/${id}`}>
-        <Button variant='solid' className="btn"> Edit </Button>
+        
+        {authCtx.isLoggedIn && <Button variant='solid' className="btn"> Edit </Button>}
         </Link>
-        <Button  className='btn' onClick={() => setModal2Open(true)}> Delete </Button>
+        {authCtx.isLoggedIn && <Button  className='btn' onClick={() => setModal2Open(true)}> Delete </Button>}
       </div>
     </Card>
 
