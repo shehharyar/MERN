@@ -23,11 +23,11 @@ app.use((error, req, res, next) => {
     res.status(error.code || 500)
     res.json({message: error.message || 'An unknown error occurred!'});
   });
-  
 mongoose
 .connect('mongodb+srv://Sheharyar:academind123@cluster0.vosumum.mongodb.net/?retryWrites=true&w=majority')
 .then(()=>{
   app.listen(5000)
+  console.log("port 5000 ")
 }
 )
 .catch(err => console.log(err))
