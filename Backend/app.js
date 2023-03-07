@@ -8,7 +8,7 @@ const HttpError = require("./models/http-error");
 const app = express();
 
 app.use(bodyParser.json());
-
+// middleware for places
 app.use('/api/places',placesRouter);
 app.use('/api/users', usersRouter );
 app.use((req, res, next)=>{
