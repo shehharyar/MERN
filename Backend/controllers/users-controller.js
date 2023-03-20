@@ -1,5 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const HttpError = require('../models/http-error');
+const User = require('../models/user');
+const { validationResult}= require('express-validator');
 
 
 let DUMMY_USERS= [
@@ -32,31 +34,62 @@ res.json({message: "Logged In, Successfully", identifiedUser});
 
 
 }
-const SignUp= (req, res, next)=>{
+const SignUp= async(req, res, next)=>{
     const errors= validationResult(req);
       console.log(errors);
       
       if(!errors.isEmpty()){
-        throw new HttpError("Invalid Inputs passed, please check your data.", 422);
+       return next( HttpError("Invalid Inputs passed, please check your data.", 422));
       }
     
-    const {name, email, password} = req.body;
+    const {name, email, password, places} = req.body;
+    let existingUser;  
+    
+    try {
+          existingUser= await User.findOne({email: email})
+      } catch (err) {
+        const error= new HttpError("Signing Up failed, Please try later.", 5000);
+        return next(error);
+      }
+      if (existingUser){
+        const error= new HttpError("User exists already, login instead.", 5000)
+        return next(error);
+      }
 
-    const hasUser= DUMMY_USERS.find(u => u.email === email);
-
-    if(hasUser){
-        throw new HttpError("Could not create user, email already exists.", 422);
-    }
-
-    const createdUser={
-        id: uuidv4(),
+      const createdUser= new User({
         name,
         email,
-        password
-    };
+        password,
+        image: "https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg",
+        places,
 
-    DUMMY_USERS.push(createdUser);
-    res.status(201).json({message: "User created", createdUser})
+      });
+      try {
+        await createdUser.save();
+
+      } catch (err) {
+        const error= new HttpError(
+        "Signing Up failed, plaease try again", 500);
+            console.log(error);
+        console.log(createdUser)     
+        return next(error);
+      } 
+
+    // const hasUser= DUMMY_USERS.find(u => u.email === email);
+
+    // if(hasUser){
+    //     throw new HttpError("Could not create user, email already exists.", 422);
+    // }
+
+    // const createdUser={
+    //     id: uuidv4(),
+    //     name,
+    //     email,
+    //     password
+    // };
+
+    // DUMMY_USERS.push(createdUser);
+    res.status(201).json({user : createdUser.toObject({getters: true})})
 }
 
 exports.getUsers= getUsers;
