@@ -18,16 +18,29 @@ const getUsers=(req, res, next)=>{
   res.json({users: DUMMY_USERS})
 }
 
-const LogIn=(req, res, next)=>{
+const LogIn= async(req, res, next)=>{
 
     const {email, password}= req.body;
 
-const identifiedUser= DUMMY_USERS.find(u => u.email === email);
-// const passwordExits= 
+    
+       let existingUser;  
+    
+    try {
+          existingUser= await User.findOne({email: email})
+      } catch (err) {
+        const error= new HttpError("Signing Up failed, Please try later.", 5000);
+        return next(error);
+      }
+      if (existingUser){
+        const error= new HttpError("User exists already, login instead.", 5000)
+        return next(error);
+      }
+// const identifiedUser= DUMMY_USERS.find(u => u.email === email);
+// // const passwordExits= 
 
-if(!identifiedUser || identifiedUser.password !== password ){
-    throw new HttpError("Could not identify user, Credentials seem to be wrong", 401);
-}
+// if(!identifiedUser || identifiedUser.password !== password ){
+//     throw new HttpError("Could not identify user, Credentials seem to be wrong", 401);
+// }
 
 res.json({message: "Logged In, Successfully", identifiedUser});
 
@@ -64,13 +77,14 @@ const SignUp= async(req, res, next)=>{
         places,
 
       });
+
       try {
         await createdUser.save();
 
       } catch (err) {
         const error= new HttpError(
         "Signing Up failed, plaease try again", 500);
-            console.log(error);
+            console.log(err);
         console.log(createdUser)     
         return next(error);
       } 
