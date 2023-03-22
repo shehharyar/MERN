@@ -14,8 +14,17 @@ let DUMMY_USERS= [
     },
 ];
 
-const getUsers=(req, res, next)=>{
-  res.json({users: DUMMY_USERS})
+const getUsers= async(req, res, next)=>{
+  let users;
+  try{
+    users= await User.find({}, "-password")
+  }
+  catch(err){
+    const error= new HttpError("fetching users failed, please try again later", 500)
+   return next(error);
+  }
+
+  res.json({users: users.map(user => user.toObject({getters: true}))});
 }
 
 const LogIn= async(req, res, next)=>{
@@ -28,13 +37,18 @@ const LogIn= async(req, res, next)=>{
     try {
           existingUser= await User.findOne({email: email})
       } catch (err) {
-        const error= new HttpError("Signing Up failed, Please try later.", 5000);
+        const error= new HttpError("Logging In failed, Please try later.", 5000);
         return next(error);
       }
-      if (existingUser){
-        const error= new HttpError("User exists already, login instead.", 5000)
-        return next(error);
+
+      if(!existingUser || existingUser.password !== password){
+        const error= new HttpError("Invalid credentials, could not log in you.", 401);
+        return next(error)
       }
+      // if (existingUser){
+      //   const error= new HttpError("User exists already, login instead.", 5000)
+      //   return next(error);
+      // }
 // const identifiedUser= DUMMY_USERS.find(u => u.email === email);
 // // const passwordExits= 
 
@@ -42,7 +56,7 @@ const LogIn= async(req, res, next)=>{
 //     throw new HttpError("Could not identify user, Credentials seem to be wrong", 401);
 // }
 
-res.json({message: "Logged In, Successfully", identifiedUser});
+res.json({message: "Logged In, Successfully"});
 
 
 
@@ -74,7 +88,7 @@ const SignUp= async(req, res, next)=>{
         email,
         password,
         image: "https://static.vecteezy.com/system/resources/previews/008/442/086/original/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg",
-        places,
+        places:[],
 
       });
 
