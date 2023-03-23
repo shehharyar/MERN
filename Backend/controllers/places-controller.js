@@ -35,17 +35,21 @@ const Place= require("../models/place");
     res.json({ place: place.toObject({ geetters: true}) }); // => { place } => { place: place }
   };
 
-  const getPlacesByUserId=(req, res, next) => {
+  const getPlacesByUserId= async (req, res, next) => {
     const userId = req.params.uid;
-    const places = DUMMY_PLACES.filter(p => {
-      return p.creator === userId;
-    });
-  
-    if (!places || places.length === 0) { 
+    
+      let userWithPlaces;
+      try{
+        userWithPlaces= await User.findById(userId).populate('places');
+      }catch(err){
+       const error = new HttpError("Fetching places failed, Please try again later", 500);
+       next(error);
+      }
+    if (!userWithPlaces || userWithPlaces.length === 0) { 
       return next( new HttpError('Could not find a place for the provided user id.', 404));
     }
   
-    res.json({ places });
+    res.json({ places: userWithPlaces.places.map(place => place.toObject({ getters: true})) });
   };
 
 
@@ -145,13 +149,25 @@ try {
     const placeId= req.params.pid;
 
     let place;
+    try {
+      place= await Place.findById(placeId).populate('creator');
+    } catch (err) {
+      const error= new HttpError("Something went wrong. Could not delete place.", 500)
+      return next(error);
+    }
+    if(!place){
+      const error= new HttpError("Could not find place for this id.", 404);
+      return next(error);
+    }
+    
+    
     try{
       const sess = await mongoose.startSession();
       sess.startTransaction();
-      await place.remove({ session: sess })
+      await place.deleteOne({session : sess})
       // place.creator.places= place.creator.places || [];
       place.creator.places.pull(place);
-      await place.creator.places.save({seesion:sess})
+      await place.creator.save({seesion:sess}) 
       await sess.commitTransaction();
     }catch(e){
       console.log(e)

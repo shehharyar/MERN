@@ -24,7 +24,7 @@ app.use((error, req, res, next) => {
     res.json({message: error.message || 'An unknown error occurred!'});
   });
 mongoose
-.connect('mongodb+srv://Sheharyar:academind123@cluster0.vosumum.mongodb.net/?retryWrites=true&w=majority')
+.connect('mongodb+srv://Sheharyar:academind123@cluster0.vosumum.mongodb.net/mern?retryWrites=true&w=majority')
 .then(()=>{
   app.listen(5000)
   console.log("port 5000 ")
