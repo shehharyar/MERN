@@ -1,34 +1,58 @@
-.header{
-    background-color: #248b8df5 !important;
-    border: 2px solid rgb(152, 190, 197);
-    font-family: 'Times New Roman', Times, serif;
-    font-style: italic;
-    font-weight: bold;
-    color: aliceblue;
-    font-size: medium;
+.modal {
+  z-index: 100;
+  position: fixed;
+  top: 22vh;
+  left: 10%;
+  width: 80%;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 8px;
 }
 
-Button:hover{
-    background-color: rgb(206, 154, 154) !important; 
-
+.modal__header {
+  width: 100%;
+  padding: 1rem 0.5rem;
+  background: #2a006e;
+  color: white;
 }
 
-Button{
-    background-color: rgb(233, 97, 97) !important; 
+.modal__header h2 {
+  margin: 0.5rem;
 }
 
-.modal-body{
-
-    /* width: 100% !important;
-    height: 100% !important; */
-    /* padding: 60%; */
-    margin: 0;
-
-    /* border: 2px solid black; */
-
+.modal__content {
+  padding: 1rem 0.5rem;
 }
-.map{
-    display: flex !important;
-    width: 104% !important;
-    height:20 !important ;
+
+.modal__footer {
+  padding: 1rem 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .modal {
+    left: calc(50% - 20rem);
+    width: 40rem;
+  }
+}
+
+.modal-enter {
+  transform: translateY(-10rem);
+  opacity: 0;
+}
+
+.modal-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 200ms;
+}
+
+.modal-exit {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-exit-active {
+  transform: translateY(-10rem);
+  opacity: 0;
+  transition: all 200ms;
 }

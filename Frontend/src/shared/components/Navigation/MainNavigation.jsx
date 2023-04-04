@@ -1,72 +1,50 @@
-import './MainNavigation.css'
-import { DrawerBody, Heading, Hide, Show } from '@chakra-ui/react'
-import React from 'react'
-import MainHeader from './MainHeader'
-import NavLinks from './NavLinks'
-import { Link } from 'react-router-dom'
-import {
-    Drawer,
- 
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,
-    Button
-  } from '@chakra-ui/react'
-import { useDisclosure } from '@chakra-ui/react'
-import {HamburgerIcon} from '@chakra-ui/icons'
-const MainNavigation = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const firstField = React.useRef()
-        
-    return (
-  <MainHeader>
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-<Button
-className='btn-nav' 
-colorScheme='teal' onClick={onOpen}>
-        <HamburgerIcon/>
-      </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement='right'
-        initialFocusRef={firstField}
-        onClose={onClose}
-        colorScheme='green'
-   >
-        <DrawerOverlay />
-        <DrawerContent className="d-content">
-          <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth='1px'>
-            Create a new account
-          </DrawerHeader>
-            <DrawerBody>
-    <NavLinks/>
+import MainHeader from './MainHeader';
+import NavLinks from './NavLinks';
+import SideDrawer from './SideDrawer';
+import Backdrop from '../UIElements/Backdrop';
+import './MainNavigation.css';
 
-            </DrawerBody>
+const MainNavigation = props => {
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
-</DrawerContent>
-</Drawer>
-     <Heading className= 'h1' as='h4' size='lg'>
+  const openDrawerHandler = () => {
+    setDrawerIsOpen(true);
+  };
 
+  const closeDrawerHandler = () => {
+    setDrawerIsOpen(false);
+  };
 
+  return (
+    <React.Fragment>
+      {drawerIsOpen && <Backdrop onClick={closeDrawerHandler} />}
+      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
+        <nav className="main-navigation__drawer-nav">
+          <NavLinks />
+        </nav>
+      </SideDrawer>
 
+      <MainHeader>
+        <button
+          className="main-navigation__menu-btn"
+          onClick={openDrawerHandler}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+        <h1 className="main-navigation__title">
+          <Link to="/">YourPlaces</Link>
+        </h1>
+        <nav className="main-navigation__header-nav">
+          <NavLinks />
+        </nav>
+      </MainHeader>
+    </React.Fragment>
+  );
+};
 
-     <Link to ='/'> Your Places </Link>
-     </Heading>
-     {/* <Hide breakpoint='(max-width: 765px )'>
-
- <NavLinks/>
-     </Hide> */}
-{/* <Show breakpoint='(min-width: 765px)'>
-<NavLinks/>
-
-</Show> */}
-<NavLinks id='new__nav'/>
-
-
-  </MainHeader>
-  )
-}
-
-export default MainNavigation
+export default MainNavigation;

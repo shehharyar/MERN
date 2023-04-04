@@ -1,99 +1,15 @@
-
-.card{
-    padding: 3rem;
-    flex-direction: column;
-    justify-content: space-between;
-
-}
-.auth{
-    border: 2px solid red;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    box-sizing: border-box;
-
+.authentication__header {
+  color: white;
+  text-align: center;
 }
 
-/* .place-form {
-        margin: 0 auto;
-    padding: 1rem;
-    width: 100%;
-    max-width: 40rem;
- 
-  }
-  */
-  .authentication{
-    width: "100%" !important;
-    /* padding: 2rem !important ; */
-    margin-top: 2rem;
-
-
-  }
-  .btn{
-    padding: 1rem 3rem;
-   color: #ffffff;
-    background: #4e0a4e;
-    margin: 2px;
-    transition: 0.4s ease-in;
-  }
-  .btn-2{
-    padding: 1rem 3rem;
-    margin: 2px;
-    
-    background-color: #ffffff !important;
-    color: #4e0a4e;
-    transition: 0.4s ease-in-out;
-
-
-  }
-  .btn-2:hover
-  {
-    background: #5c235c !important;
-    color: #ffffff;
-    transition: 0.4s ease-in;
-
-
-  }
-  .btn_container{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-  }
-.input{
-    width: "100%" !important;
-    height: auto;
-    border-radius: 1rem;
-    padding: 0.5rem 1rem !important;
-    color: blueviolet !important;
-    background-color: rgb(242, 203, 247) !important;
-    border: 2px solid rgb(245, 133, 245) !important;
-    /* margin-top: 3rem !important; */
-}
-.error{
-    border-color: red;
-    background-color: rgb(219, 170, 170);
-}
-.input:focus,
-.input:hover{
-    border: 2px solid rgb(146, 44, 146);
-
-}
-.LogIn{
-    margin-top: 1rem;
-    padding: 0.8rem 2rem 0.8rem 2rem !important;
-    background-color: rgba(209, 0, 209, 0.596) !important;
+.authentication {
+  width: 90%;
+  max-width: 25rem;
+  margin: 7rem auto;
+  text-align: center;
 }
 
-h1{
-    text-align: center;
-    font-size: 4rem;
-font-weight: bold !important;
-    color: rgba(39, 10, 39, 0.904);
+.authentication form {
+  margin-bottom: 1rem;
 }
-/* form{
-    border: 2px solid red;
-    padding: 6rem;
-} */

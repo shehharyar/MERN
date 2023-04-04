@@ -1,14 +1,14 @@
 import {BrowserRouter as Router , Routes, Route, } from "react-router-dom";
 
 import NewPlace from "./places/pages/NewPlace";
-import User from "./user/pages/User";
+import Users from "./user/pages/Users";
 import React, { useState, useCallback } from "react";
 import './App.css';
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import UserPlaces from "./places/pages/UserPlaces";
 import UpdatePlace from "./places/pages/UpdatePlace";
 import Auth from "./user/pages/Auth";
-import { AuthCOntext } from "./shared/context/auth-context";
+import { AuthContext } from "./shared/context/auth-context";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn]= useState(false);
@@ -24,7 +24,7 @@ if(isLoggedIn){
   routes=(
 
     <Routes>
-        <Route path="/" element={<User/>}/>
+        <Route path="/" element={<Users/>}/>
         <Route path="/:userId/places" element={<UserPlaces/>}/>
         <Route path="/places/new" element={<NewPlace/>}/>
         <Route path="/places/:placeId" element={<UpdatePlace/>}/>
@@ -36,7 +36,7 @@ else{
 routes=(
 <Routes>
 
-  <Route path="/" element={<User/>}/>
+  <Route path="/" element={<Users/>}/>
   <Route path="/:userId/places" element={<UserPlaces/>}/>
   <Route path="/auth" element={<Auth/>}/>
 
@@ -45,7 +45,7 @@ routes=(
 
   return (
     
-       <AuthCOntext.Provider value={{
+       <AuthContext.Provider value={{
         isLoggedIn: isLoggedIn,
         Login: LogIn,
         LogOut: LogOut
@@ -60,7 +60,7 @@ routes=(
       
     </div>
     </Router>
-       </AuthCOntext.Provider>
+       </AuthContext.Provider>
 
         );  
   

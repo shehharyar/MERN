@@ -1,36 +1,33 @@
-/* eslint-disable no-unreachable */
-import React from 'react'
-import Dummy from './Dummy'
-// import UserItem from './UserItem';
+import React from 'react';
+
+import UserItem from './UserItem';
+import Card from '../../shared/components/UIElements/Card';
 import './UsersList.css';
 
-const UsersList = ({ items }) => {
- if(items.length === 0) {return (
-    <div className='center'>
-       <div>
-            <h1>
-                No Users Found.
-            </h1>
-       </div>
-    
-    </div>
-  )}
-return (
-<ul className='center-lizt'>
+const UsersList = props => {
+  if (props.items.length === 0) {
+    return (
+      <div className="center">
+        <Card>
+          <h2>No users found.</h2>
+        </Card>
+      </div>
+    );
+  }
 
-{items.map(user => 
-    <Dummy
-        key={user.id}
-        id={user.id} 
-        name={user.name}
-        image={user.image}
-        placesCount={user.places}
-        /> 
-        )} 
-
-
-    </ul>)
-
-}
+  return (
+    <ul className="users-list">
+      {props.items.map(user => (
+        <UserItem
+          key={user.id}
+          id={user.id}
+          image={user.image}
+          name={user.name}
+          placeCount={user.places}
+        />
+      ))}
+    </ul>
+  );
+};
 
 export default UsersList;

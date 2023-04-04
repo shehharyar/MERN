@@ -1,68 +1,97 @@
-import { Button} from '@chakra-ui/react';
-import { Modal } from 'antd';
-import React, {useState, useContext} from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+
 import Card from '../../shared/components/UIElements/Card';
-import ReactModal from '../../shared/components/UIElements/ReactModal';
+import Button from '../../shared/components/FormElements/Button';
+import Modal from '../../shared/components/UIElements/Modal';
+import Map from '../../shared/components/UIElements/Map';
+import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceItem.css';
-import { useDisclosure } from '@chakra-ui/react';
-import { AuthCOntext } from '../../shared/context/auth-context';
 
-// import Map from '../../shared/components/UIElements/Map';
-const PlaceItem = ({image, id, title, description, address, coordinates}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [modal1Open, setModal1Open] = useState(false);
-  const [modal2Open, setModal2Open] = useState(false);
-  const authCtx=  useContext(AuthCOntext);
+const PlaceItem = props => {
+  const auth = useContext(AuthContext);
+  const [showMap, setShowMap] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const openMapHandler = () => setShowMap(true);
+
+  const closeMapHandler = () => setShowMap(false);
+
+  const showDeleteWarningHandler = () => {
+    setShowConfirmModal(true);
+  };
+
+  const cancelDeleteHandler = () => {
+    setShowConfirmModal(false);
+  };
+
+  const confirmDeleteHandler = () => {
+    setShowConfirmModal(false);
+    console.log('DELETING...');
+  };
+
   return (
-    <div>
-<ReactModal header={title} isOpen={isOpen} onClose={onClose} coordinates={coordinates}/>
-{/* // eslint-disable-next-line jsx-a11y/iframe-has-title */}
-
-
-    <li className="place-item">
-{/* <iframe title='map' src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12043.04784709864!2d28.980175!3d41.008583!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x236e6f6f37444fae!2sHagia%20Sophia!5e0!3m2!1sen!2s!4v1670554409788!5m2!1sen!2s" width="100" height="50" style="border:0;" 
->
-</iframe> */}
-    <Card className="place-item__content">
-      <div className="place-item__image">
-        <img src={image} alt={title} />
-      </div>
-      <div className="place-item__info">
-        <h2>{title}</h2>
-        <h3>{address}</h3>
-        <p>{description}</p>
-      </div>
-      <div className="place-item__actions">
-        {/* <button>VIEW ON MAP</button>
-        <button>EDIT</button>
-        <button>DELETE</button> */
-        }
-        <Button onClick={onOpen} className="btn"> View On Map </Button>
-        <Link to={`/places/${id}`}>
-        
-        {authCtx.isLoggedIn && <Button variant='solid' className="btn"> Edit </Button>}
-        </Link>
-        {authCtx.isLoggedIn && <Button  className='btn' onClick={() => setModal2Open(true)}> Delete </Button>}
-      </div>
-    </Card>
-
-
-
-  </li>  
-  <Modal
-        title="Vertically centered modal dialog"
-        centered
-        open={modal2Open}
-        onOk={() => setModal2Open(false)}
-        onCancel={() => setModal2Open(false)}
+    <React.Fragment>
+      <Modal
+        show={showMap}
+        onCancel={closeMapHandler}
+        header={props.address}
+        contentClass="place-item__modal-content"
+        footerClass="place-item__modal-actions"
+        footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
-        <p>some contents...</p>
-        <p>some contents...</p>
-        <p>some contents...</p>
-      </Modal>    
-    </div>
-  )
-}
+        <div className="map-container">
+          <Map center={props.coordinates} zoom={16} />
+        </div>
+      </Modal>
+      <Modal
+        show={showConfirmModal}
+        onCancel={cancelDeleteHandler}
+        header="Are you sure?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={cancelDeleteHandler}>
+              CANCEL
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              DELETE
+            </Button>
+          </React.Fragment>
+        }
+      >
+        <p>
+          Do you want to proceed and delete this place? Please note that it
+          can't be undone thereafter.
+        </p>
+      </Modal>
+      <li className="place-item">
+        <Card className="place-item__content">
+          <div className="place-item__image">
+            <img src={props.image} alt={props.title} />
+          </div>
+          <div className="place-item__info">
+            <h2>{props.title}</h2>
+            <h3>{props.address}</h3>
+            <p>{props.description}</p>
+          </div>
+          <div className="place-item__actions">
+            <Button inverse onClick={openMapHandler}>
+              VIEW ON MAP
+            </Button>
+            {auth.isLoggedIn && (
+              <Button to={`/places/${props.id}`}>EDIT</Button>
+            )}
 
-export default PlaceItem
+            {auth.isLoggedIn && (
+              <Button danger onClick={showDeleteWarningHandler}>
+                DELETE
+              </Button>
+            )}
+          </div>
+        </Card>
+      </li>
+    </React.Fragment>
+  );
+};
+
+export default PlaceItem;
