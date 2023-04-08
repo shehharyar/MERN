@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import UsersList from '../components/UsersList.jsx';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal.jsx';
@@ -20,7 +20,7 @@ const Users = () => {
           }
 
           setLoadedUsers(responseData.users);
-        } catch (error) {
+        } catch (err) {
           setError(err.message);
         }
         setIsLoading(false);
@@ -34,23 +34,17 @@ const Users = () => {
     setError(null);
   }
 
-  return 
-  <>
-  {error && <ErrorModal error={error} onClear= {errorHandler}/> }
-  {
-    isLoading &&
-    (
-      <div className="center">
-        <LoadingSpinner/>
+  return( 
+  <React.Fragment>
+    <ErrorModal error={error} onClear={errorHandler}/>
+    {
+      isLoading && <LoadingSpinner />
+    }
+    {
+      !isLoading && loadedUsers && <UsersList items={loadedUsers}/>      
+    }
 
-      </div>)
-
-}
-{!isLoading && loadedUsers && <UsersList items={loadedUsers.users} /> }
-
-
-
-  </>
+  </React.Fragment>);
 };
 
 export default Users;

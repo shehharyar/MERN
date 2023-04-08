@@ -11,11 +11,14 @@ import {
 import { useForm } from '../../shared/hooks/form-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 
 const Auth = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError]= useState()
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -56,40 +59,106 @@ const Auth = () => {
 
   const authSubmitHandler = async event => {
     event.preventDefault();
-    try{
-      const responseData= await fetch('http://localhost:5000/api/users/signup',{
-        method: "POST",
-        headers:{
-          "Content-Type": "application/json"
+  if(isLoginMode){
+    try {
+      const response = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify( {
+        body: JSON.stringify({
+          email: formState.inputs.email.value,
+          password: formState.inputs.password.value
+        })
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.message);
+      }
+      setIsLoading(false);
+      auth.login();
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.message || 'Something went wrong, please try again.');
+    }
+  }
+  else {
+    try {
+      const response = await fetch('http://localhost:5000/api/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
           name: formState.inputs.name.value,
           email: formState.inputs.email.value,
           password: formState.inputs.password.value
         })
+      });
 
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData.message);
       }
-      );
-      const response=  await responseData.json();
-      // auth.login()
-      console.log(response);
+      setIsLoading(false);
+      auth.login();
+    } catch (err) {
+      setIsLoading(false);
+      setError(err.message || 'Something went wrong, please try again.');
     }
-    catch(err){
-      console.log(err)
-    }
+  }
+    //   else{ 
+    //     try{
+    //   setIsLoading(true);
+    //   const responseData= await fetch('http://localhost:5000/api/users/signup',{
+    //     method: "POST",
+    //     headers:{
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify( {
+    //       name: formState.inputs.name.value,
+    //       email: formState.inputs.email.value,
+    //       password: formState.inputs.password.value
+    //     })
+
+    //   }
+    //   );
+    //   const response=  await responseData.json();
+    //  if(!response.ok){
+    //   throw new Error(responseData.message);
+    //  }
+    //   // auth.login()
+    //   console.log(responseData);
+    // setIsLoading(false);
+    //   auth.login();
+
+    // }
+    // catch(err){
+    //   setIsLoading(false);
+    //   setError(err.message || "Something went wrong! Please try again.");
+    //   // console.log(error)
+    // }}
     // console.log(formState.inputs);
     
   };
 
+  function errorHandler(){
+    setError(null);
+  }
+
   return (
-    <Card className="authentication">
+<React.Fragment>
+<ErrorModal error={error} onClear={errorHandler}/>
+<Card className="authentication">
+      {isLoading && <LoadingSpinner asOverlay/>}
       <h2>Login Required</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
         {!isLoginMode && (
           <Input
-            element="input"
-            id="name"
+          element="input"
+          id="name"
             type="text"
             label="Your Name"
             validators={[VALIDATOR_REQUIRE()]}
@@ -114,7 +183,7 @@ const Auth = () => {
           validators={[VALIDATOR_MINLENGTH(5)]}
           errorText="Please enter a valid password, at least 5 characters."
           onInput={inputHandler}
-        />
+          />
         <Button type="submit" disabled={!formState.isValid}>
           {isLoginMode ? 'LOGIN' : 'SIGNUP'}
         </Button>
@@ -123,6 +192,7 @@ const Auth = () => {
         SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
       </Button>
     </Card>
+          </React.Fragment>
   );
 };
 

@@ -1,4 +1,4 @@
-import {BrowserRouter as Router , Routes, Route, } from "react-router-dom";
+import {BrowserRouter as Router , Routes, Route, Navigate } from "react-router-dom";
 
 import NewPlace from "./places/pages/NewPlace";
 import Users from "./user/pages/Users";
@@ -28,6 +28,7 @@ if(isLoggedIn){
         <Route path="/:userId/places" element={<UserPlaces/>}/>
         <Route path="/places/new" element={<NewPlace/>}/>
         <Route path="/places/:placeId" element={<UpdatePlace/>}/>
+        {/* <Route path='/' element={<Navigate replace to='/' />} /> */}
     </Routes>
 
   );
@@ -39,6 +40,7 @@ routes=(
   <Route path="/" element={<Users/>}/>
   <Route path="/:userId/places" element={<UserPlaces/>}/>
   <Route path="/auth" element={<Auth/>}/>
+  {/* <Route path='/' element={<Navigate replace to='/' />} /> */}
 
 </Routes>);
 }
@@ -47,8 +49,8 @@ routes=(
     
        <AuthContext.Provider value={{
         isLoggedIn: isLoggedIn,
-        Login: LogIn,
-        LogOut: LogOut
+        logIn: LogIn,
+        logOut: LogOut
        }}>
 
     <Router>
