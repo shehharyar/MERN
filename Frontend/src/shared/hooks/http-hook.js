@@ -19,13 +19,18 @@ activeHttpRequests.current.push(httpAbortCtrl);
         });
         
       const responseData = await response.json();
+        activeHttpRequests.current= activeHttpRequests.current.filter(reqCtrl => reqCtrl !== httpAbortCtrl);
+      
       if (!response.ok) {
         throw new Error(responseData.message);
       }
+      setIsLoading(false);
     return responseData;
     }
       catch(err){
+       setIsLoading(false);
         setError(err.message);
+        throw err;
       }
       setIsLoading(false);
     },[]);
