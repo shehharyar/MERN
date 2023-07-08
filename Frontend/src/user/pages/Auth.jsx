@@ -15,6 +15,7 @@ import { Navigate, redirect, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import ImageUpload from '../../shared/components/FormElements/ImageUpload';
 
 const Auth = () => {
  const navigate= useNavigate();
@@ -43,7 +44,8 @@ const Auth = () => {
       setFormData(
         {
           ...formState.inputs,
-          name: undefined
+          name: undefined,
+          image: undefined,
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
@@ -53,6 +55,10 @@ const Auth = () => {
           ...formState.inputs,
           name: {
             value: '',
+            isValid: false
+          },
+          image:{
+            value: null,
             isValid: false
           }
         },
@@ -64,6 +70,7 @@ const Auth = () => {
 
   const authSubmitHandler = async event => {
     event.preventDefault();
+    console.log(formState.inputs);
   if(isLoginMode){
     try {
     const responseData=  await sendRequest('http://localhost:5000/api/users/login', 
@@ -166,6 +173,9 @@ const Auth = () => {
             errorText="Please enter a name."
             onInput={inputHandler}
           />
+        )}
+        {!isLoginMode && (
+          <ImageUpload id="image" center onInput={inputHandler} errorText={error}/>
         )}
         <Input
           element="input"
