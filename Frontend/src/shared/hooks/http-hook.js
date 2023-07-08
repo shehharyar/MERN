@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import {useState} from 'react';
  export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError]= useState();
+    const [error, setError]= useState(null);
     const activeHttpRequests = useRef([]);
 
 
@@ -28,11 +28,11 @@ activeHttpRequests.current.push(httpAbortCtrl);
     return responseData;
     }
       catch(err){
-       setIsLoading(false);
-        setError(err.message);
-        throw err;
+          setError(err.message);
+          setIsLoading(false);
+          throw err;
       }
-      setIsLoading(false);
+    //   setIsLoading(false);
     },[]);
 
     const clearError= () =>{

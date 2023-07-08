@@ -11,14 +11,17 @@ import {
 import { useForm } from '../../shared/hooks/form-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
+import { Navigate, redirect, useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const Auth = () => {
+ const navigate= useNavigate();
   const auth = useContext(AuthContext);
+  const [isLoggedIn, setIsLoggedIn] =useState(false);
   const [isLoginMode, setIsLoginMode] = useState(true);
-  const {isLoading, error, sendRequest}= useHttpClient();
+  const {isLoading, error, sendRequest, clearError}= useHttpClient();
   // const [isLoading, setIsLoading] = useState(false);
   // const [error, setError]= useState()
   const [formState, inputHandler, setFormData] = useForm(
@@ -63,7 +66,7 @@ const Auth = () => {
     event.preventDefault();
   if(isLoginMode){
     try {
-      await sendRequest('http://localhost:5000/api/users/login', 
+    const responseData=  await sendRequest('http://localhost:5000/api/users/login', 
         'POST',
         JSON.stringify({
           email: formState.inputs.email.value,
@@ -75,13 +78,15 @@ const Auth = () => {
         }
       );
 
-            auth.logIn();
+            auth.logIn(responseData.user.id);
+            navigate('/');
+            // return redirect('/');
     } catch (err) {
           }
   }
   else {
     try {
-       await sendRequest('http://localhost:5000/api/users/signup', 
+      const responseData= await sendRequest('http://localhost:5000/api/users/signup', 
         'POST',
         JSON.stringify({
            name: formState.inputs.name.value,
@@ -92,10 +97,9 @@ const Auth = () => {
           'Content-Type': 'application/json'
         },
       );
+      auth.logIn(responseData.user.id);
+      navigate('/');
 
-      
-      
-      auth.logIn();
     } catch (err) {
       
     }
@@ -135,13 +139,18 @@ const Auth = () => {
     
   };
 
-  function errorHandler(){
-    setError(null);
-  }
+  // function errorHandler(){
+  //   setError(null);
+  // }
 
   return (
+
 <React.Fragment>
-<ErrorModal error={error} onClear={errorHandler}/>
+{isLoggedIn && <Navigate/>}
+<ErrorModal error={error} onClear={clearError}/>
+
+
+
 <Card className="authentication">
       {isLoading && <LoadingSpinner asOverlay/>}
       <h2>Login Required</h2>
@@ -172,8 +181,8 @@ const Auth = () => {
           id="password"
           type="password"
           label="Password"
-          validators={[VALIDATOR_MINLENGTH(5)]}
-          errorText="Please enter a valid password, at least 5 characters."
+          validators={[VALIDATOR_MINLENGTH(6)]}
+          errorText="Please enter a valid password, at least 6 characters."
           onInput={inputHandler}
           />
         <Button type="submit" disabled={!formState.isValid}>
