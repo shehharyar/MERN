@@ -61,13 +61,15 @@ const Place= require("../models/place");
          new HttpError("Invalid Inputs passed, please check your data.", 422);
       }
 
-    const { title, description, coordinates, address, creator }= req.body;
+    const { title, description, 
+      // coordinates, 
+      address, creator }= req.body;
     
     const createdPlace = new Place({
       title,
       description,
       address,
-      location: coordinates,
+      // location: coordinates,
       image:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
       creator

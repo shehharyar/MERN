@@ -56,7 +56,11 @@ const LogIn= async(req, res, next)=>{
 //     throw new HttpError("Could not identify user, Credentials seem to be wrong", 401);
 // }
 
-res.json({message: "Logged In, Successfully"});
+res.json(
+  {
+    message: "Logged In, Successfully",
+    user: existingUser.toObject({getters: true})     
+   });
 
 
 
@@ -75,11 +79,11 @@ const SignUp= async(req, res, next)=>{
     try {
           existingUser= await User.findOne({email: email})
       } catch (err) {
-        const error= new HttpError("Signing Up failed, Please try later.", 5000);
+        const error= new HttpError("Signing Up failed, Please try later.", 422);
         return next(error);
       }
       if (existingUser){
-        const error= new HttpError("User exists already, login instead.", 5000)
+        const error= new HttpError("User exists already, login instead.", 422)
         return next(error);
       }
 
