@@ -85,7 +85,7 @@ const Auth = () => {
         }
       );
 
-            auth.logIn(responseData.user.id);
+            auth.logIn(responseData.userId, responseData.token);
             navigate('/');
             // return redirect('/');
     } catch (err) {
@@ -93,18 +93,25 @@ const Auth = () => {
   }
   else {
     try {
+      let formData= new FormData();
+      formData.append('email', formState.inputs.email.value );
+      formData.append('name', formState.inputs.name.value );
+      formData.append('password', formState.inputs.password.value );
+      formData.append('image', formState.inputs.image.value );
+
       const responseData= await sendRequest('http://localhost:5000/api/users/signup', 
         'POST',
-        JSON.stringify({
-           name: formState.inputs.name.value,
-           email: formState.inputs.email.value,
-           password: formState.inputs.password.value
-         }),
-         {
-          'Content-Type': 'application/json'
-        },
+        // JSON.stringify({
+        //    name: formState.inputs.name.value,
+        //    email: formState.inputs.email.value,
+        //    password: formState.inputs.password.value
+        //  }),
+        //  {
+        //   'Content-Type': 'application/json'
+        // },
+        formData
       );
-      auth.logIn(responseData.user.id);
+      auth.logIn(responseData.userId, responseData.token);
       navigate('/');
 
     } catch (err) {

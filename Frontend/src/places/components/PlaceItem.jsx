@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-
 import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
@@ -9,6 +8,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceItem.css';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import Avatar from '../../shared/components/UIElements/Avatar';
 
 const PlaceItem = props => {
   const auth = useContext(AuthContext);
@@ -27,17 +27,18 @@ const PlaceItem = props => {
     setShowConfirmModal(false);
   };
 
+
+
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
-    try{
-      await sendRequest(`http://localhost:5000/api/places${props.id}`, 
-    "DELETE"
-    );
-    props.onDelete(props.id);
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        'DELETE'
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
   }
-  catch(e){}
-    
-  };
 // console.log(props.place.id);
   return (
     <React.Fragment>
@@ -79,7 +80,9 @@ const PlaceItem = props => {
         {isLoading && <LoadingSpinner asOverlay/>}
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img src={props.image} alt={props.title} />
+          <Avatar image={`http://localhost:5000/${props.image}`} alt={props.name} />
+
+            {/* <img src={props.image} alt={props.title} /> */}
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>
