@@ -1,3 +1,4 @@
+const fs = require('fs');
 const HttpError= require('../models/http-error');  
 const { validationResult}= require('express-validator');
 const { v4: uuidv4 } = require('uuid');
@@ -70,8 +71,7 @@ const Place= require("../models/place");
       description,
       address,
       // location: coordinates,
-      image:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/400px-Empire_State_Building_%28aerial_view%29.jpg',
+      image: req.file.path,
       creator
     });
   
@@ -132,7 +132,7 @@ try {
     
     // const updatedPlace= {...DUMMY_PLACES.find(p => p.id === pid)};
     // const  placeIndex= DUMMY_PLACES.findIndex(p=> p.id ===pid);
-
+      
     place.title= title;
     place.description= description;
     // DUMMY_PLACES[placeIndex]= updatedPlace;
@@ -162,7 +162,7 @@ try {
       return next(error);
     }
     
-    
+   const imagePath= place.image;
     try{
       const sess = await mongoose.startSession();
       sess.startTransaction();
@@ -190,7 +190,9 @@ try {
     // }
 
     // DUMMY_PLACES= DUMMY_PLACES.filter(p => p.id !== placeId);
-    
+    fs.unlink(imagePath, err => {
+      console.log(err);
+    })
     res.status(200).json({message : "Place Deleted"});
   };
 
