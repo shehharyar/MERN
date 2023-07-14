@@ -49,7 +49,7 @@ try{
   formData.append('address', formState.inputs.address.value );
   formData.append('creator', auth.userId );
   formData.append('image', formState.inputs.image.value );
-let response=  await  sendRequest("http://localhost:5000/api/places","POST", 
+  await  sendRequest("http://localhost:5000/api/places","POST", 
   // JSON.stringify({
   //     title: formState.inputs.title.value,
   //     description: formState.inputs.description.value,
@@ -62,7 +62,7 @@ let response=  await  sendRequest("http://localhost:5000/api/places","POST",
       Authorization: 'Bearer ' + auth.token
     },
     )
-    console.log(response)
+    // console.log(response)
     navigate('/');
     console.log(auth.token);
 }catch(err){}
