@@ -108,27 +108,32 @@ try {
 
   const updatePlaceById= async (req, res, next)=> {
     const errors= validationResult(req);
-      console.log(errors);
       
-      if(!errors.isEmpty()){
+    if(!errors.isEmpty()){
         throw new HttpError("Invalid Inputs passed, please check your data.", 422);
       }
-
 
     const {title, description}= req.body;
     const pid= req.params.pid;
       let place;
 
       try{
-       place= await Place.findById(pid).populate('creator');
+       place= await Place.findById(pid);
       }catch(e){
         const error= new HttpError("Something Wrong. Could not update plcae", 500);
         return next(error);
       }
+
+      if(place.creator.toString() !== req.userData.userId){
+       const error = new HttpError("You are not allowed to edit this place", 401);
+       return next(error); 
+      }
+      
       if(!place){
         const error = new HttpError("Could not find place for this id.", 404)
         return next(error);
       }
+
     
     // const updatedPlace= {...DUMMY_PLACES.find(p => p.id === pid)};
     // const  placeIndex= DUMMY_PLACES.findIndex(p=> p.id ===pid);
@@ -147,7 +152,7 @@ try {
     res.status(200).json({place: place.toObject({getters: true}) });
   }
   
-  const deletePlaceById= async (req, res,next)=>{
+  const deletePlaceById= async (req, res, next)=>{
     const placeId= req.params.pid;
 
     let place;
@@ -157,6 +162,12 @@ try {
       const error= new HttpError("Something went wrong. Could not delete place.", 500)
       return next(error);
     }
+
+    if(place.creator.id !== req.userData.userId){
+      const error = new HttpError("You are not allowed to delete this place", 401);
+      return next(error);
+    }
+
     if(!place){
       const error= new HttpError("Could not find place for this id.", 404);
       return next(error);
